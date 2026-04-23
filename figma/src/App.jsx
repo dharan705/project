@@ -1,4 +1,4 @@
-import Design from "./page/DesignEditor"
+import Design from "./page/DesignEditor1"
 import './App.css'
 
 function App() {

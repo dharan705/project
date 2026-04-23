@@ -1,7 +1,7 @@
 // DesignEditor.jsx
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import * as Icons from 'react-feather';
-import './DesignEditor.scss';
+import './DesignEditor1.scss';
 
 // Constants
 const SHAPE_TYPES = {
@@ -58,13 +58,13 @@ const EVENT_TYPES = {
 
 const DEFAULT_SHAPE_PROPS = {
   [SHAPE_TYPES.RECTANGLE]: { width: 100, height: 100, fill: '#f0f0f0', stroke: '#000000', strokeWidth: 1 },
-  [SHAPE_TYPES.CIRCLE]: { radius: 50, fill: '#f0f0f0', stroke: '#000000', strokeWidth: 1 },
+  [SHAPE_TYPES.CIRCLE]: { radius: 50, width: 100, height: 100, fill: '#f0f0f0', stroke: '#000000', strokeWidth: 1 },
   [SHAPE_TYPES.TEXT]: { text: 'Text element', fontSize: 16, fontFamily: 'Arial', color: '#000000' },
-  [SHAPE_TYPES.STAR]: { points: 5, innerRadius: 25, outerRadius: 50, fill: '#f0f0f0', stroke: '#000000', strokeWidth: 1 },
-  [SHAPE_TYPES.POLYGON]: { sides: 6, radius: 50, fill: '#f0f0f0', stroke: '#000000', strokeWidth: 1 },
+  [SHAPE_TYPES.STAR]: { points: 5, innerRadius: 25, outerRadius: 50, width: 100, height: 100, fill: '#f0f0f0', stroke: '#000000', strokeWidth: 1 },
+  [SHAPE_TYPES.POLYGON]: { sides: 6, radius: 50, width: 100, height: 100, fill: '#f0f0f0', stroke: '#000000', strokeWidth: 1 },
   [SHAPE_TYPES.IMAGE]: { width: 200, height: 150, src: 'https://via.placeholder.com/200x150' },
-  [SHAPE_TYPES.LINE]: { x2: 100, y2: 0, stroke: '#000000', strokeWidth: 2 },
-  [SHAPE_TYPES.ARROW]: { x2: 100, y2: 0, stroke: '#000000', strokeWidth: 2, arrowSize: 10 },
+  [SHAPE_TYPES.LINE]: { x2: 100, y2: 0, width: 100, height: 4, stroke: '#000000', strokeWidth: 2 },
+  [SHAPE_TYPES.ARROW]: { x2: 100, y2: 0, width: 100, height: 20, stroke: '#000000', strokeWidth: 2, arrowSize: 10 },
   [SHAPE_TYPES.CONTAINER]: { width: 300, height: 200, background: '#f8f8f8', children: [] },
   [SHAPE_TYPES.GRID_LAYOUT]: { columns: 3, gap: 10, width: 400, height: 300, children: [] },
   [SHAPE_TYPES.FLEX_LAYOUT]: { direction: 'row', gap: 10, width: 400, height: 100, children: [] },
@@ -1962,8 +1962,11 @@ const DesignEditor = () => {
     // Ensure element stays within canvas bounds
     const canvasWidth = canvasSize.width;
     const canvasHeight = canvasSize.height;
-    const elementWidth = element.width || 0;
-    const elementHeight = element.height || 0;
+    // For circle/star/polygon, derive display size from radius if width/height not set
+    const derivedSize = element.radius ? element.radius * 2 :
+                        element.outerRadius ? element.outerRadius * 2 : 0;
+    const elementWidth = element.width || derivedSize || 100;
+    const elementHeight = element.height || derivedSize || 100;
     
     const boundedX = Math.max(0, Math.min(element.x, canvasWidth - elementWidth));
     const boundedY = Math.max(0, Math.min(element.y, canvasHeight - elementHeight));
@@ -1972,8 +1975,8 @@ const DesignEditor = () => {
       position: 'absolute',
       left: `${boundedX}px`,
       top: `${boundedY}px`,
-      width: element.width ? `${element.width}px` : 'auto',
-      height: element.height ? `${element.height}px` : 'auto',
+      width: `${elementWidth}px`,
+      height: `${elementHeight}px`,
       border: isSelected ? '2px solid #1e88e5' : 'none',
       cursor: selectedTool === 'select' ? 'move' : 'pointer',
       opacity: element.opacity !== undefined ? element.opacity : 1,

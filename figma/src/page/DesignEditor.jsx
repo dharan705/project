@@ -58,7 +58,7 @@ const EVENT_TYPES = {
 
 const DEFAULT_SHAPE_PROPS = {
   [SHAPE_TYPES.RECTANGLE]: { width: 100, height: 100, fill: '#f0f0f0', stroke: '#000000', strokeWidth: 1 },
-  [SHAPE_TYPES.CIRCLE]: { radius: 50, fill: '#f0f0f0', stroke: '#000000', strokeWidth: 1 },
+  [SHAPE_TYPES.CIRCLE]: { radius: 45, fill: '#f0f0f0', stroke: '#000000', strokeWidth: 1 },
   [SHAPE_TYPES.TEXT]: { text: 'Text element', fontSize: 16, fontFamily: 'Arial', color: '#000000' },
   [SHAPE_TYPES.STAR]: { points: 5, innerRadius: 25, outerRadius: 50, fill: '#f0f0f0', stroke: '#000000', strokeWidth: 1 },
   [SHAPE_TYPES.POLYGON]: { sides: 6, radius: 50, fill: '#f0f0f0', stroke: '#000000', strokeWidth: 1 },
@@ -422,7 +422,7 @@ const Sidebar = ({
               size={16} 
               style={{ 
                 marginLeft: 'auto',
-                transform: expandedSections.tools ? 'rotate(0deg)' : 'rotate(-90deg)',
+                transform: expandedSections.tools ? 'rotate(-90deg)' : 'rotate(0deg)',
                 transition: 'transform 0.2s'
               }} 
             />
@@ -1132,6 +1132,7 @@ const PropertiesPanel = ({
               />
             </div>
           )}
+          
         </div>
       );
     }
@@ -2017,18 +2018,24 @@ const DesignEditor = () => {
         break;
         
       case SHAPE_TYPES.CIRCLE:
-        content = (
-          <div 
-            style={{
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              backgroundColor: element.fill || 'transparent',
-              border: `${element.strokeWidth || 1}px solid ${element.stroke || 'transparent'}`
-            }}
-          />
-        );
-        break;
+  content = (
+    <svg 
+      width="100%" 
+      height="100%" 
+      viewBox="0 0 100 100" 
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <circle 
+        cx="50" 
+        cy="50" 
+        r={element.radius || 45} 
+        fill={element.fill || "transparent"} 
+        stroke={element.stroke || "#000000"} 
+        strokeWidth={element.strokeWidth || 1}
+      />
+    </svg>
+  );
+  break;
         
       case SHAPE_TYPES.TEXT:
         content = (
